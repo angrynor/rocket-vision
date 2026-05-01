@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: #0a0a0b;
+  color: #f5f5f5;
+}
+
+.report h1,
+.report h2,
+.report h3 {
+  font-weight: 700;
+  color: #f5f5f5;
+}
+
+.report h1 { font-size: 1.25rem; margin-top: 1.25rem; }
+.report h2 { font-size: 1.05rem; margin-top: 1.4rem; margin-bottom: 0.4rem; letter-spacing: 0.02em; }
+.report h3 { font-size: 0.95rem; margin-top: 1rem; }
+
+.report p { margin: 0.4rem 0; line-height: 1.6; color: #e6e6e6; }
+.report ul { list-style: disc; padding-left: 1.4rem; margin: 0.4rem 0; }
+.report li { margin: 0.2rem 0; line-height: 1.6; }
+.report strong { color: #ffffff; }
+.report code { font-family: "JetBrains Mono", ui-monospace, monospace; background: #2a2a2e; padding: 0.05rem 0.3rem; border-radius: 0.25rem; font-size: 0.9em; }
+
+@keyframes pulse-cursor {
+  0%, 70% { opacity: 1; }
+  71%, 100% { opacity: 0; }
+}
+.streaming-cursor::after {
+  content: "▍";
+  display: inline-block;
+  margin-left: 2px;
+  color: #00e0ff;
+  animation: pulse-cursor 1s infinite steps(2);
+}
