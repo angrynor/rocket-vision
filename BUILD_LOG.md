@@ -109,4 +109,52 @@ Wrote `README.md` and this `BUILD_LOG.md`.
 
 ## 2026-05-01 17:16 UTC — DEPLOY
 
-(see deploy section below)
+GitHub repo: https://github.com/angrynor/rocket-vision (public)
+Vercel project: angrynors-projects/rocket-vision (linked via CLI)
+Production URL: **https://rocket-vision.vercel.app**
+
+Steps:
+1. `gh repo create rocket-vision --public --source=. --remote=origin --push`
+2. `npx vercel link --yes --project rocket-vision` — created `.vercel/`
+3. `vercel env add ANTHROPIC_API_KEY` for production + development (preview env couldn't be added through the CLI without TTY; non-blocking — production is what serves the demo, and Gavin can add preview through the web UI in 10 seconds if needed)
+4. `vercel deploy --prod --yes`
+5. Production smoke test passed at https://rocket-vision.vercel.app/ (HTTP 200, 1.1s).
+
+Note: GitHub auto-connect surfaced a permissions warning — Vercel's GitHub app needs org-level repo access on the `angrynor` account to wire up auto-deploys. CLI deploys work today. To enable push-to-deploy, Gavin grants Vercel access to `angrynor/rocket-vision` from https://vercel.com/dashboard.
+
+## 2026-05-01 17:23 UTC — TEST
+
+Production verification — **7/7 Playwright e2e tests passing against the deployed URL** in 57s. Full vision flow live in production: real Claude `claude-sonnet-4-6` calls returning all 7 sections per fixture chart with appropriate badge classifications.
+
+**44/44 unit tests passing.** `tsc --noEmit` clean. `next build` clean (38.8 kB / 126 kB First Load JS).
+
+## 2026-05-01 17:23 UTC — REVIEW — SUCCESS CRITERIA (§11)
+
+- [x] `npm install` runs cleanly
+- [x] `npm run dev` boots, no console errors
+- [x] All unit tests pass (44/44)
+- [x] All 3 Playwright e2e scenarios pass against local
+- [x] Image upload works, vision call succeeds, 7-section output renders
+- [x] All 5 strategy lenses + Auto-detect work (verified via prompts.test.ts substitution sweep + 3 e2e flows)
+- [x] Strategy match badge displays correctly with color coding (verified in AnalysisReport.tsx + e2e badge assertions)
+- [x] All 4 self-review gates passed (see 17:14 entry)
+- [x] Deployed to Vercel successfully (https://rocket-vision.vercel.app)
+- [x] All 3 e2e scenarios pass against deployed URL (7/7 incl. validation tests)
+- [x] BUILD_LOG.md complete
+- [x] README.md present
+- [x] Footer pitch line present (verbatim per §5.1)
+- [x] Mobile responsive sanity-checked (max-w-720px container, grid-cols-1 sm:grid-cols-2 strategy cards)
+- [x] No secrets committed (`.env.local` gitignored before `git init`; verified with `git ls-files`)
+
+ALL GREEN. Build complete.
+
+## 2026-05-01 17:24 UTC — NOTE FOR GAVIN
+
+Morning checklist:
+
+1. Open **https://rocket-vision.vercel.app** — should load instantly.
+2. Drop in a real TradingView screenshot. Try a clean breakout chart with strategy = Breakout, then a chop/range chart with Breakout to see the `NO MATCH` + `SKIP` flow.
+3. Footer "Learn how →" links to `https://oma.example.com/preview` — swap for the real OMA preview registration URL before the retreat. File: [components/Footer.tsx](components/Footer.tsx).
+4. To wire up auto-deploys: visit https://vercel.com/dashboard → Settings → Git → Connect → grant the Vercel GitHub app access to `angrynor/rocket-vision`. Until then, redeploy with `npx vercel --prod` from the repo.
+5. To watch e2e tests drive a real browser: `HEADED=1 npm run test:e2e`.
+
